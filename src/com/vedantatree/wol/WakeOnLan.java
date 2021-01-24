@@ -39,7 +39,6 @@ public class WakeOnLan
 		catch( Throwable th )
 		{
 			logger.error( "Error while initializing properties for WakeOnLan", th );
-			System.exit( 1 );
 		}
 	}
 
