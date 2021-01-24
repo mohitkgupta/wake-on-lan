@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="WOL" basedir="." default="all">
+
+	<!-- Defining properties-->
+	<property name="name" value="WOL" />
+	<property name="root" value="." />
+	<property name="src.dir" value="src" />
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="build" />
+	<property name="javadoc.dir" value="javadoc" />
+
+	<!-- Providing the library-->
+	<path id="WOL-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${build.dir}" />
+	</path>
+
+	<path id="ant-classpath">
+		<fileset dir="${lib.dir}\ant">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Cleaning output dirs ( build, dist)-->
+	<target name="clean" description="Clean output dirs (build, dist)">
+		<delete dir="${build.dir}" />
+		<delete dir="${report.dir}" />
+		<delete dir="${javadoc.dir}" />
+		<delete file="${name}.jar" />
+	</target>
+
+	<!-- Initializing output directories-->
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<!-- Compile main source tree java files into class files, generate jar files-->
+	<target name="compile" description="Compile main source tree java files and test cases into class files, generate jar files" depends="init">
+		<!-- Compiling java files in src directory-->
+		<javac destdir="${build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="WOL-classpath" />
+		</javac>
+		<!-- Compiling java files in test directory-->
+		
+	</target>
+
+	<!-- Creating jar-->
+	<target name="dist" depends="compile">
+		<echo message="dist target executed" />
+		<!--<jar jarfile="${dist.dir}/${name}.jar" compress="true" basedir="${build.dir}">-->
+		<jar jarfile="${name}.jar" compress="true" basedir="${build.dir}">
+			<manifest>
+				
+			</manifest>
+
+		</jar>
+	</target>
+
+		<!-- Creating all java docs-->
+	<target name="javadoc" description="Generate POC Javadocs">
+		<!-- Deleting old docs-->
+		<delete dir="${javadoc.dir}" failonerror="false" />
+		<!-- Creating new directory for docs-->
+		<mkdir dir="${javadoc.dir}" />
+		<!-- Creating docs-->
+		<javadoc sourcepath="${src.dir}" destdir="${javadoc.dir}" windowtitle="WOL" source="1.5" access="protected" author="true" version="true" use="true" defaultexcludes="true" header='&lt;a href=\"http://www.vedantatree.com/\" target=\"_top\"&gt;ECT&lt;/a&gt;'>
+			<arg value="-breakiterator" />
+			<arg value="-J-Xmx128m" />
+			<arg value="-J-XX:MaxPermSize=128m" />
+			<doctitle>
+				<![CDATA[<h1>ECT</h1>]]></doctitle>
+		<classpath refid="WOL-classpath" />
+		<packageset dir="${src.dir}">
+			<include name="com/vedantatree/**" />
+		</packageset>
+
+		<link href="http://logging.apache.org/log4j/docs/api/" />
+	</javadoc>
+</target>
+
+
+<target name="all" depends="clean,javadoc,dist" description="Clean,build,javadoc,dist"/>
+
+</project>
